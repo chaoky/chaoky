@@ -1,0 +1,3 @@
+#+TITLE: Readme
+
+* simple static blog/home page
