@@ -9,6 +9,9 @@ exports.createPages = async ({ graphql, actions }) => {
         edges {
           node {
             slug
+            metadata {
+              tags
+            }
           }
           next {
             slug
@@ -30,24 +33,11 @@ exports.createPages = async ({ graphql, actions }) => {
     throw documents.errors
   }
 
-  // Create blog posts pages.
-  const posts = documents.data.allOrgContent.edges
-
-  posts.forEach(({ node, previous, next }, index) => {
-    createPage({
-      path: node.slug,
-      component: path.resolve("./src/blog-post.tsx"),
-      context: {
-        slug: node.slug,
-        previous,
-        next,
-      },
-    })
-  })
-
-  // Create blog post list pages
   const postsPerPage = 5
-  const numPages = Math.ceil(posts.length / postsPerPage)
+
+  // Create blog post list pages default (recent first)
+  const posts = documents.data.allOrgContent.edges
+  let numPages = Math.ceil(posts.length / postsPerPage)
 
   Array.from({ length: numPages }).forEach((_, i) => {
     createPage({
@@ -58,6 +48,38 @@ exports.createPages = async ({ graphql, actions }) => {
         skip: i * postsPerPage,
         numPages,
         currentPage: i + 1,
+      },
+    })
+  })
+
+  // Create blog post list with only "featured"
+  const featured = posts.filter(e => e.node.metadata.tags.includes("Featured"))
+  numPages = Math.ceil(featured.length / postsPerPage)
+
+  Array.from({ length: numPages }).forEach((_, i) => {
+    createPage({
+      path: i === 0 ? `/featured` : `/featured${i + 1}`,
+      component: path.resolve("./src/blog-list.tsx"),
+      context: {
+        limit: postsPerPage,
+        skip: i * postsPerPage,
+        numPages,
+        currentPage: i + 1,
+        tags: ["Featured"],
+      },
+    })
+  })
+
+  // Create blog posts pages.
+  posts.forEach(({ node, previous, next }, index) => {
+    createPage({
+      path: node.slug,
+      component: path.resolve("./src/blog-post.tsx"),
+      context: {
+        slug: node.slug,
+        tags: node.metadata.tags,
+        previous,
+        next,
       },
     })
   })

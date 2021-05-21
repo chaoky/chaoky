@@ -1,6 +1,8 @@
 #+TITLE: Supoprted Syntax
 #+DATE: [2018-12-23 Sun]
 #+DESCRIPTION: "YEP COCK"
+#+TAGS: Featured Tutorial Org-mode
+
 
 * Emphasis (can be in _headline_ too)
 

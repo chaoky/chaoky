@@ -19,12 +19,13 @@ import "./global.css"
 
 export default function ({
   isHome,
+  isFeatured,
   children,
 }: {
-  isHome: Boolean
+  isHome: boolean
   children: any
+  isFeatured: boolean
 }) {
-  const [recent, setRecent] = useState(true)
   const toggleTheme = (
     <ThemeToggler>
       {({ toggleTheme, theme }) => (
@@ -39,10 +40,6 @@ export default function ({
     </ThemeToggler>
   )
 
-  const toggleFilter = (
-    <button onClick={() => setRecent(!recent)}>
-      {recent ? <Star /> : <Clock />}
-    </button>
   const toggleFilter = isFeatured ? (
     <Link
       style={{

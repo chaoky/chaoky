@@ -12,7 +12,7 @@ const BlogIndex = ({
 }: PageProps<Data, PageContext>) => {
   const siteTitle = data.site.siteMetadata.title
   const posts = data.allOrgContent.edges
-  const { currentPage, numPages } = pageContext
+  const { currentPage, numPages, tags } = pageContext
 
   const isFirst = currentPage === 1
   const isLast = currentPage === numPages
@@ -20,7 +20,7 @@ const BlogIndex = ({
   const nextPage = `/${currentPage + 1}`
 
   return (
-    <Layout isHome={true}>
+    <Layout isHome={true} isFeatured={tags === undefined}>
       <SEO title="All posts" />
       {posts.map(({ node: { slug, metadata } }) => {
         const title = metadata.title || slug
@@ -76,13 +76,17 @@ const BlogIndex = ({
 export default BlogIndex
 
 export const pageQuery = graphql`
-  query blogPageQuery {
+  query blogListQuery($skip: Int!, $limit: Int!, $tags: [String]) {
     site {
       siteMetadata {
         title
       }
     }
-    allOrgContent {
+    allOrgContent(
+      skip: $skip
+      limit: $limit
+      filter: { metadata: { tags: { in: $tags } } }
+    ) {
       edges {
         node {
           slug
@@ -99,6 +103,7 @@ export const pageQuery = graphql`
 type PageContext = {
   currentPage: number
   numPages: number
+  tags: undefined | [string]
 }
 type Data = {
   site: {
