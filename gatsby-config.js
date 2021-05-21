@@ -37,12 +37,6 @@ module.exports = {
               wrapperStyle: `margin-bottom: 1.0725rem`,
             },
           },
-          {
-            resolve: `gatsby-source-github-api`,
-            options: {
-              token: process.env.ACCESS_TOKEN,
-            },
-          },
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
