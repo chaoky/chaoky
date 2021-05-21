@@ -33,7 +33,7 @@ export default function ({
           className="leading-none p-1"
           onClick={() => toggleTheme(theme === "dark" ? "light" : "dark")}
         >
-          {theme === "dark" ? <Sun /> : <Moon />}
+          {theme === "dark" ? <Moon /> : <Sun />}
         </button>
       )}
     </ThemeToggler>
@@ -43,6 +43,26 @@ export default function ({
     <button onClick={() => setRecent(!recent)}>
       {recent ? <Star /> : <Clock />}
     </button>
+  const toggleFilter = isFeatured ? (
+    <Link
+      style={{
+        boxShadow: `none`,
+        color: `inherit`,
+      }}
+      to={`/featured`}
+    >
+      <Star />
+    </Link>
+  ) : (
+    <Link
+      style={{
+        boxShadow: `none`,
+        color: `inherit`,
+      }}
+      to={`/`}
+    >
+      <Clock />
+    </Link>
   )
 
   const homeLink = (
