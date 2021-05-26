@@ -52,7 +52,7 @@ export default function ({
           ...scale(1),
           fontFamily: `Montserrat, sans-serif`,
         }}
-        className="mt-auto mb-0"
+        className="mt-auto mb-0 text-center"
       >
         Leonardo Dias
       </h1>
@@ -80,14 +80,13 @@ export default function ({
         backgroundColor: "var(--bg)",
         color: "var(--textNormal)",
         transition: "color 0.2s ease-out, background 0.2s ease-out",
-        height: "100vh",
       }}
-      className="md:flex-row flex flex-col  my-auto"
+      className="md:flex-row flex flex-col my-auto"
     >
       <div className="sideBar">{sideBar}</div>
 
-      <div className="w-full h-full flex-col flex items-center">
-        <main className="md:px-32 md:self-start">{children}</main>
+      <div className="w-full min-h-screen flex-col flex items-center">
+        <main className="md:self-start w-full md:px-32 px-14">{children}</main>
         <Footer />
       </div>
     </div>

@@ -85,9 +85,15 @@ button {
 @media (min-width: 768px) {
   .sideBar {
     width: 530px;
+    position: sticky;
+    height: 100vh;
+    top: 0;
   }
 }
 
+.section {
+  overflow-x: auto;
+}
 .main-content {
   background-color: var(--bg);
   position: absolute;
