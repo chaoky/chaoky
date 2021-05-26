@@ -65,7 +65,7 @@ export default function ({
         <p className="m-0">work@lordie.moe</p>
         <p className="m-0">+55 75 9 9963 6587</p>
       </div>
-      <div className="mt-auto w-1/2 flex justify-evenly">
+      <div className="md:mt-auto mt-8 w-1/2 flex justify-evenly">
         <svg.GitHub />
         <svg.Linkedin />
         <svg.Twitter />
@@ -80,13 +80,13 @@ export default function ({
         backgroundColor: "var(--bg)",
         color: "var(--textNormal)",
         transition: "color 0.2s ease-out, background 0.2s ease-out",
-        minHeight: "100vh",
+        height: "100vh",
       }}
       className="md:flex-row flex flex-col  my-auto"
     >
       <div className="sideBar">{sideBar}</div>
 
-      <div className="w-full flex-col flex items-center">
+      <div className="w-full h-full flex-col flex items-center">
         <main className="md:px-32 md:self-start">{children}</main>
         <Footer />
       </div>
@@ -96,11 +96,15 @@ export default function ({
 
 const Footer = () => {
   return (
-    <footer className="my-12 text-center mt-auto">
-      <a href="https://github.com/chaoky" target="_blank" rel="noreferrer">
+    <footer className="mb-8 text-center mt-auto">
+      <a
+        href="https://github.com/chaoky"
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-2"
+      >
         <svg.Code />
-        {" copyleft "}
-        {new Date().getFullYear()}
+        {" copyleft "} {new Date().getFullYear()}
       </a>
     </footer>
   )

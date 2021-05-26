@@ -74,7 +74,7 @@ button {
 }
 
 .sideBar {
-  padding: 1rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   background-color: var(--lightBg);
@@ -85,7 +85,6 @@ button {
 @media (min-width: 768px) {
   .sideBar {
     width: 530px;
-    height: 100vh;
   }
 }
 
