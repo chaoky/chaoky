@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useLayoutEffect } from "react"
 import { Link } from "gatsby"
 import { ThemeToggler } from "gatsby-plugin-dark-mode"
 import { scale } from "./typography"
 import * as svg from "./svgs"
-
-import "./global.css"
+import "./global.scss"
 
 export default function ({
   isHome,
@@ -15,18 +14,29 @@ export default function ({
   children: any
   isFeatured: boolean
 }) {
+  const [dark, setDark] = useState(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches
+  )
+
+  useLayoutEffect(() => {
+    const cs = document.body.classList
+    if (dark) {
+      cs.add("dark")
+    } else {
+      cs.remove("dark")
+    }
+  }, [dark])
+
   const toggleTheme = (
-    <ThemeToggler>
-      {({ toggleTheme, theme }) => (
-        <button
-          aria-label="theme-switch"
-          className="leading-none p-1"
-          onClick={() => toggleTheme(theme === "dark" ? "light" : "dark")}
-        >
-          {theme === "dark" ? <svg.Moon /> : <svg.Sun />}
-        </button>
-      )}
-    </ThemeToggler>
+    <button
+      aria-label="theme-switch"
+      className="leading-none p-1"
+      onClick={() => {
+        setDark(!dark)
+      }}
+    >
+      {dark ? <svg.Moon /> : <svg.Sun />}
+    </button>
   )
 
   const toggleFilter = isFeatured ? (
