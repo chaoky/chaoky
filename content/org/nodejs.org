@@ -1,17 +1,17 @@
 #+ORGA_PUBLISH_KEYWORD: PUBLISHED
 #+TODO: DRAFT | PUBLISHED
 
-* PUBLISHED Node.js deep dive
+* PUBLISHED Node.js certification
   CLOSED: [2020-04-23 Sun 19:36]
-  Up into now, my learning experience has been quite enjoyable, Clojure, Scala and Rust are a blast to work with, but since every single job opportunity for the unexperienced developer is either for Node.js or Java, I decided to invest my next few weeks into learning Node ~ I'm not a big Java fan ~.
+  Since every single job opportunity for the =unexperienced= developer is either related to Node or Java, and I have done a few Node projects before, I decided to invest my next few weeks into learning Node, JavaScript is not my favorite language, but the ecosystem is huge and there's enough tooling available to make using it an ok experience, for example, I could use TypeScript for a typing system, =Rambda= for a standard library, and Babel for TCO.
 
-  Since I'm learning this mainly to look for job opportunity I've decided to start out with a more professional goal, instead of just reading a book and doing some test projects, my goal will be to work towards this [[https://openjsf.org/certification/][certification]] from the OpenJS Foundation, just googling how to study for that brought me to this nice [[https://www.nodecertification.com/][link]], It's a big compilation of resources for helping the novice Noder(?) study for the certification exam, exactly what I needed, I don't think I'll try to get the certification right after finishing this, 300 USD ~monkaS ~ is quite expensive and I rather study a little bit more instead of risking throwing this much money await.
+  Because I'm mainly learning this for job opportunities, I decided to start with a more professional goal, instead of just reading a book and doing a test project, my goal will be to work towards this [[https://openjsf.org/certification/][certification]] from the =OpenJS= Foundation.
 
-  that's all, more documents coming, probably one for each topic I get my hands on, I never really write in english outside of chat rooms or tweets so I'm looking forward to this! :)
+  That's all, I'll be following [[https://www.nodecertification.com/][this]] nice resource compilation, more documents coming soon, probably one for each topic I get my hands on, I don't think I'll try to get certified right after finishing this tho, 300 USD ~monkaS~ is quite expensive and I rather study a little bit more instead of risking throwing this much money await, also because I never really write in english outside of chat rooms and tweets, I'm really looking forward to this! :)
 
 * PUBLISHED Node.js Streams
 CLOSED: [2020-04-23 Sun 19:36]
-This is the first topic recommend by the [[https://www.nodecertification.com/][node certification guide]], I really like using steams but the Node api is bit more cumbersome compared to my previous experience with Elixir and Haskell. The api provides two main classes, `Writable` and `Redable`, there's also `Duplex` that just inherits from both of them and `Transform` which is just a special form of `Duplex` that facilitates applying functions to streams.
+This is the first topic recommend by the [[https://www.nodecertification.com/][node certification guide]], I really like using streams but the Node api is bit cumbersome compared to my previous experiences. The api provides two main classes, ~Writable~ and ~Redable~, there's also ~Duplex~ that just inherits from both of them and ~Transform~ which is just a special form of ~Duplex~ that facilitates applying functions to streams.
 #+begin_src js
 const { Writable, Redable, Duplex, Transform } = require("stream")
 
@@ -51,44 +51,42 @@ const upperCaseTr = new Transform({
     callback()
   },
 })
-
 #+end_src
 
-The `Pipe()` method on `Redable` streams can be used compose them with `Writable` streams, but the `pipeline()` utility provides a much nicer way of doing that.
+The ~Pipe()~ method on ~Redable~ streams can be used compose them with ~Writable~ streams, but the ~pipeline()~ utility provides a much nicer way of doing this.
 #+begin_src js
 a.pipe(read).pipe(duplex).pipe(write)
 
 pipeline(read, duplex, write, err => {})
-
 #+end_src
 
 
-Streams, like every Js api, comes with a few event handlers, I don't see why I would ever use those
+Streams, like every javascript api, comes with a few event handlers
 #+begin_src js
 readable.on("data", chunk => {
-  writable.write(chunk);
-});
+  writable.write(chunk)
+})
 
 readable.on("end", () => {
-  writable.end();
-});
+  writable.end()
+})
 #+end_src
 
-`ObjectMode` is an unexpected cool property that let's you mark your stream output/input type as an `Object` instead of `Buffer`, which is the default.
+~ObjectMode~ is an unexpected cool property that let's you mark your stream output/input type as an ~Object~ instead of ~Buffer~, which is the default.
 #+begin_src js
 const arrayToObject = new Transform({
   readableObjectMode: true,
   writableObjectMode: true,
   transform(chunk, encoding, callback) {
-    const obj = {};
+    const obj = {}
     for (let i = 0; i < chunk.length; i += 2) {
-      obj[chunk[i]] = chunk[i + 1];
+      obj[chunk[i]] = chunk[i + 1]
     }
-    this.push(obj);
-    callback();
-  }
-});
+    this.push(obj)
+    callback()
+  },
+})
 #+end_src
-the `chunk` argument in any stream with `writableObjectMode` `true` will be an `Object` :)
+the ~chunk~ argument in any stream with ~writableObjectMode: true~ will be an ~Object~ :)
 
-A lot of Node core libraries implement the `stream` api, so using it feels pretty natural. Thanks to [[https://jscomplete.com/learn/node-beyond-basics/node-streams][jscomplete]] and [[https://heynode.com/tutorial/what-stream][heynode]] for their clear and well structure resources.
+A lot of Node core libraries implement the ~stream~ api, so using it feels pretty natural. Thanks to [[https://jscomplete.com/learn/node-beyond-basics/node-streams][jscomplete]] and [[https://heynode.com/tutorial/what-stream][heynode]] for clear and well structure resources.
