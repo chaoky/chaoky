@@ -14,18 +14,7 @@ export default function ({
   children: any
   isFeatured: boolean
 }) {
-  const [dark, setDark] = useState(
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches
-  )
-
-  useLayoutEffect(() => {
-    const cs = document.body.classList
-    if (dark) {
-      cs.add("dark")
-    } else {
-      cs.remove("dark")
-    }
-  }, [dark])
+  const [dark, setDark] = useTheme()
 
   const toggleTheme = (
     <button
@@ -117,4 +106,30 @@ const Footer = () => {
       </a>
     </footer>
   )
+}
+
+function useTheme() {
+  const [dark, setDark] = useState(() => {
+    switch (window.sessionStorage.getItem("theme")) {
+      case "light":
+        return false
+      case "dark":
+        return true
+      default:
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+    }
+  })
+
+  useLayoutEffect(() => {
+    const cs = document.body.classList
+    if (dark) {
+      window.sessionStorage.setItem("theme", "dark")
+      cs.add("dark")
+    } else {
+      window.sessionStorage.setItem("theme", "light")
+      cs.remove("dark")
+    }
+  }, [dark])
+
+  return [dark, setDark]
 }
