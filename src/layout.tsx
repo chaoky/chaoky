@@ -109,27 +109,30 @@ const Footer = () => {
 }
 
 function useTheme() {
-  const [dark, setDark] = useState(() => {
-    switch (window.sessionStorage.getItem("theme")) {
-      case "light":
-        return false
-      case "dark":
-        return true
-      default:
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-    }
-  })
+  if (typeof window !== "undefined") {
+    const [dark, setDark] = useState(() => {
+      switch (window.sessionStorage.getItem("theme")) {
+        case "light":
+          return false
+        case "dark":
+          return true
+        default:
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+      }
+    })
 
-  useLayoutEffect(() => {
-    const cs = document.body.classList
-    if (dark) {
-      window.sessionStorage.setItem("theme", "dark")
-      cs.add("dark")
-    } else {
-      window.sessionStorage.setItem("theme", "light")
-      cs.remove("dark")
-    }
-  }, [dark])
+    useLayoutEffect(() => {
+      const cs = document.body.classList
+      if (dark) {
+        window.sessionStorage.setItem("theme", "dark")
+        cs.add("dark")
+      } else {
+        window.sessionStorage.setItem("theme", "light")
+        cs.remove("dark")
+      }
+    }, [dark])
 
-  return [dark, setDark]
+    return [dark, setDark]
+  }
+  return [null, null]
 }
