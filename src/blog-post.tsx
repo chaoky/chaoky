@@ -11,7 +11,7 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
   const { previous, next } = pageContext
 
   return (
-    <Layout isHome={false}>
+    <Layout isHome={false} isFeatured={false}>
       <SEO
         title={post.metadata.title}
         description={post.metadata.title || post.excerpt}
