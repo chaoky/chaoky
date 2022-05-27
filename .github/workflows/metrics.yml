@@ -24,6 +24,6 @@ jobs:
           plugin_languages_categories: programming
           plugin_languages_recent_categories: programming
           plugin_languages_recent_days: 180
-          repositories_skipped: chaoky/dotfiles
           plugin_languages_aliases: RenderScript:Rust # temp solution until Rust as RenderScript bug is fixed
+          repositories_affiliations: owner, collaborator, organization_member
 
