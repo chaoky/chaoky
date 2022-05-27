@@ -25,3 +25,4 @@ jobs:
           plugin_languages_recent_categories: programming
           plugin_languages_recent_days: 180
           repositories_skipped: dotfiles
+          plugin_lines_skipped: dotfiles
