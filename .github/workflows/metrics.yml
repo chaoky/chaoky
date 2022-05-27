@@ -13,8 +13,7 @@ jobs:
         with:
           filename: metrics.plugin.languages.svg
           token: ${{ secrets.METRICS_TOKEN }}
+          commits_authoring: levimanga@gmail.com
           plugin_languages: yes
-          plugin_languages_limit: 6
           plugin_languages_indepth: yes
-          commits_authoring: chaoky, lordie, levimanga@gmail.com
           plugin_languages_ignored: javascript
