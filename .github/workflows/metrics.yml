@@ -20,9 +20,10 @@ jobs:
           plugin_languages_sections: most-used, recently-used
           plugin_languages_indepth: yes
           plugin_languages_analysis_timeout: 30
-          plugin_languages_ignored: javascript
+          plugin_languages_ignored: javascript, AL, Berry, Arc
           plugin_languages_categories: programming
           plugin_languages_recent_categories: programming
           plugin_languages_recent_days: 180
-          repositories_skipped: dotfiles
-          plugin_lines_skipped: dotfiles
+          repositories_skipped: chaoky/dotfiles
+          plugin_languages_aliases: RenderScript:Rust # temp solution until Rust as RenderScript bug is fixed
+
