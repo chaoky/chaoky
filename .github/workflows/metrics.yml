@@ -13,7 +13,9 @@ jobs:
         with:
           filename: metrics.plugin.languages.svg
           token: ${{ secrets.METRICS_TOKEN }}
+          user: chaoky
           commits_authoring: levimanga@gmail.com, chaoky, lordie
+          config_twemoji: yes
           plugin_languages: yes
           plugin_languages_sections: most-used, recently-used
           plugin_languages_indepth: yes
@@ -22,3 +24,4 @@ jobs:
           plugin_languages_categories: programming
           plugin_languages_recent_categories: programming
           plugin_languages_recent_days: 180
+          repositories_skipped: dotfiles
