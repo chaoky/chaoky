@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-blog-list-tsx","path":"/featured","result":{"data":{"site":{"siteMetadata":{"title":"lordie"}},"allOrgContent":{"edges":[{"node":{"slug":"/tutor","metadata":{"date":"December 23, 2018","title":"Supoprted Syntax"}}}]}},"pageContext":{"limit":5,"skip":0,"numPages":1,"currentPage":1,"tags":["Featured"]}},"staticQueryHashes":["2841359383"]}
