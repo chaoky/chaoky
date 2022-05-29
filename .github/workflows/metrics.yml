@@ -13,7 +13,6 @@ jobs:
         with:
           filename: metrics.plugin.languages.svg
           token: ${{ secrets.METRICS_TOKEN }}
-          user: chaoky
           commits_authoring: levimanga@gmail.com, chaoky, lordie
           config_twemoji: yes
           plugin_languages: yes
@@ -26,4 +25,5 @@ jobs:
           plugin_languages_recent_days: 180
           plugin_languages_aliases: RenderScript:Rust # temp solution until Rust as RenderScript bug is fixed
           repositories_affiliations: owner, collaborator, organization_member
+          debug: yes
 
