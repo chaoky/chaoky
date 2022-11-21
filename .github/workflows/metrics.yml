@@ -14,17 +14,18 @@ jobs:
           filename: metrics.plugin.languages.svg
           token: ${{ secrets.METRICS_TOKEN }}
           commits_authoring: levimanga@gmail.com, chaoky, lordie
+          repositories_affiliations: owner, collaborator, organization_member
+          repositories_forks: true
+          repositories: 1000000
           config_twemoji: yes
+          base: header, activity, metadata
+          debug: yes
           plugin_languages: yes
-          plugin_languages_sections: most-used, recently-used
+          plugin_languages_sections: most-used
           plugin_languages_indepth: yes
-          plugin_languages_analysis_timeout: 30
+          plugin_languages_analysis_timeout: 60
+          plugin_languages_analysis_timeout_repositories: 15
           plugin_languages_ignored: javascript, AL, Berry, Arc
           plugin_languages_categories: programming
-          plugin_languages_recent_categories: programming
-          plugin_languages_recent_days: 180
           plugin_languages_aliases: RenderScript:Rust # temp solution until Rust as RenderScript bug is fixed
-          repositories_affiliations: owner, collaborator, organization_member
-          debug: yes
-          base: header, activity, repositories, metadata
 
