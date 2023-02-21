@@ -1,3 +1,0 @@
-#+TITLE: Leo Dias
-
-[[file:metrics.plugin.languages.svg]]
