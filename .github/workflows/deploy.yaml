@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "infra/docker-compose.yaml"
+      - "compose.yaml"
   workflow_dispatch:
 
 jobs:
