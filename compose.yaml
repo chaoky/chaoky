@@ -34,7 +34,7 @@ services:
       - wakapi-data:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wakapi.rule=Host(`flamingos.zip`)"
+      - "traefik.http.routers.wakapi.rule=Host(`waka.flamingos.zip`)"
       - "traefik.http.routers.wakapi.entrypoints=websecure"
       - "traefik.http.routers.wakapi.tls.certresolver=flamingos"
     environment:
