@@ -34,9 +34,12 @@ services:
       - wakapi-data:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wakapi.rule=Host(`flamingos.zip`)"
       - "traefik.http.routers.wakapi.entrypoints=websecure"
       - "traefik.http.routers.wakapi.tls.certresolver=flamingos"
+      - "traefik.http.routers.wakapi.middlewares=wakapi"
+      - "traefik.http.routers.wakapi.rule=Host(`flamingos.zip`) && PathPrefix(`/waka`)"
+      - "traefik.http.middlewares.wakapi.stripprefix.forceslash=true"
+      - "traefik.http.middlewares.wakapi.stripprefix.prefixes=/waka"
     environment:
       WAKAPI_PASSWORD_SALT: "IVFONzh7Vk55l1TJOzzd2zPrwLtiYw0i"
       ENVIRONMENT: "prod"
