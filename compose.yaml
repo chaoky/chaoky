@@ -1,50 +1,46 @@
 services:
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
+  traefik:
+    image: "traefik:v2.8"
+    restart: always
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesresolvers.flamingos.acme.tlschallenge=true"
+      - "--certificatesresolvers.flamingos.acme.email=leo@flamingos.zip"
+      - "--certificatesresolvers.flamingos.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.websecure.address=:443"
     ports:
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - conf:/etc/nginx/conf.d
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - certs:/etc/nginx/certs:ro
-  acme-companion:
-    image: nginxproxy/acme-companion
-    environment:
-      - DEFAULT_EMAIL=leo@flamingo.zip
-    volumes_from:
-      - nginx-proxy
-    volumes:
-      - certs:/etc/nginx/certs:rw
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "acme:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   watchtower:
     image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
     environment:
       WATCHTOWER_CLEANUP: true
       WATCHTOWER_POLL_INTERVAL: 3600
       WATCHTOWER_ROLLING_RESTART: true
       WATCHTOWER_INCLUDE_RESTARTING: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/localtime:/etc/localtime:ro
+
   wakapi:
     image: ghcr.io/muety/wakapi:latest
+    restart: always
     volumes:
       - wakapi-data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wakapi.rule=Host(`flamingos.zip`)"
+      - "traefik.http.routers.wakapi.entrypoints=websecure"
+      - "traefik.http.routers.wakapi.tls.certresolver=flamingos"
     environment:
       WAKAPI_PASSWORD_SALT: "IVFONzh7Vk55l1TJOzzd2zPrwLtiYw0i"
       ENVIRONMENT: "prod"
-      VIRTUAL_HOST: "flamingos.zip"
-      VIRTUAL_PORT: "3000"
-      VIRTUAL_PATH: "/waka"
-      VIRTUAL_DEST: "/"
 
 volumes:
-  conf:
-  vhost:
-  html:
-  certs:
   acme:
   wakapi-data:
