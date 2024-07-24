@@ -6,7 +6,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--certificatesresolvers.flamingos.acme.tlschallenge=true"
-      - "--certificatesresolvers.flamingos.acme.email=leo@flamingos.zip"
+      - "--certificatesresolvers.flamingos.acme.email=leo@flamingo.moe"
       - "--certificatesresolvers.flamingos.acme.storage=/letsencrypt/acme.json"
       - "--entrypoints.websecure.address=:443"
     ports:
@@ -34,7 +34,7 @@ services:
       - wakapi-data:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wakapi.rule=Host(`waka.flamingos.zip`)"
+      - "traefik.http.routers.wakapi.rule=Host(`waka.flamingo.moe`)"
       - "traefik.http.routers.wakapi.entrypoints=websecure"
       - "traefik.http.routers.wakapi.tls.certresolver=flamingos"
     environment:
