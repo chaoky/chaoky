@@ -1,5 +1,8 @@
 package:
   name: camp
+  publish:
+    version: 0.0.0
+    license: "Apache-2.0"
   dependencies:
     - aff
     - affjax
