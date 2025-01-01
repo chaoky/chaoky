@@ -12,7 +12,9 @@
             "arraybuffer",
             "avar",
             "canvas",
+            "css",
             "deku-core",
+            "deku-css",
             "deku-dom",
             "fetch",
             "filterable",
@@ -26,6 +28,7 @@
             "stringutils",
             "substitute",
             "tidy-codegen",
+            "tldr",
             "uint",
             "web-pointerevents",
             "web-touchevents",
@@ -47,12 +50,15 @@
             "bifunctors",
             "canvas",
             "catenable-lists",
+            "colors",
             "console",
             "const",
             "contravariant",
             "control",
+            "css",
             "datetime",
             "deku-core",
+            "deku-css",
             "deku-dom",
             "distributive",
             "dodo-printer",
@@ -117,6 +123,7 @@
             "psci-support",
             "qualified-do",
             "quickcheck",
+            "quickcheck-laws",
             "random",
             "record",
             "refs",
@@ -131,8 +138,10 @@
             "stringutils",
             "substitute",
             "tailrec",
+            "these",
             "tidy",
             "tidy-codegen",
+            "tldr",
             "transformers",
             "tuples",
             "type-equality",
@@ -691,8 +700,17 @@
     "extra_packages": {
       "deku-core": {
         "git": "https://github.com/mikesol/purescript-deku.git",
-        "ref": "276f48adde3d9354f61917f7e9ae2ae7b43df6b2",
+        "ref": "v0.12.1",
         "subdir": "deku-core",
+        "dependencies": [
+          "hyrule",
+          "untagged-union"
+        ]
+      },
+      "deku-css": {
+        "git": "https://github.com/mikesol/purescript-deku.git",
+        "ref": "v0.12.1",
+        "subdir": "deku-css",
         "dependencies": [
           "hyrule",
           "untagged-union"
@@ -700,7 +718,7 @@
       },
       "deku-dom": {
         "git": "https://github.com/mikesol/purescript-deku.git",
-        "ref": "276f48adde3d9354f61917f7e9ae2ae7b43df6b2",
+        "ref": "v0.12.1",
         "subdir": "deku-dom",
         "dependencies": [
           "hyrule",
@@ -747,7 +765,7 @@
       },
       "hyrule": {
         "git": "https://github.com/mikesol/purescript-hyrule.git",
-        "ref": "a2a32e0",
+        "ref": "v2.5.1",
         "dependencies": [
           "avar",
           "effect",
@@ -821,6 +839,13 @@
           "tuples",
           "type-equality",
           "unicode"
+        ]
+      },
+      "tldr": {
+        "git": "https://github.com/mikesol/purescript-tldr.git",
+        "ref": "7945d3f",
+        "dependencies": [
+          "prelude"
         ]
       }
     }
@@ -1024,6 +1049,19 @@
         "unfoldable"
       ]
     },
+    "colors": {
+      "type": "registry",
+      "version": "7.0.1",
+      "integrity": "sha256-udlg/y2PFsHYli8Tgz8BQGGrOjyGo0BcJj36IfgYADs=",
+      "dependencies": [
+        "arrays",
+        "integers",
+        "lists",
+        "numbers",
+        "partial",
+        "strings"
+      ]
+    },
     "console": {
       "type": "registry",
       "version": "6.1.0",
@@ -1064,6 +1102,21 @@
         "prelude"
       ]
     },
+    "css": {
+      "type": "registry",
+      "version": "6.0.0",
+      "integrity": "sha256-zfSHxgiU4rSWuVxMjSKKh+s7j433wxmsr+CqI6hm9s4=",
+      "dependencies": [
+        "colors",
+        "console",
+        "effect",
+        "nonempty",
+        "profunctor",
+        "strings",
+        "these",
+        "transformers"
+      ]
+    },
     "datetime": {
       "type": "registry",
       "version": "6.1.0",
@@ -1090,8 +1143,18 @@
     "deku-core": {
       "type": "git",
       "url": "https://github.com/mikesol/purescript-deku.git",
-      "rev": "276f48adde3d9354f61917f7e9ae2ae7b43df6b2",
+      "rev": "98c67533cc8c399aa643b495d3c02bab963e5b80",
       "subdir": "deku-core",
+      "dependencies": [
+        "hyrule",
+        "untagged-union"
+      ]
+    },
+    "deku-css": {
+      "type": "git",
+      "url": "https://github.com/mikesol/purescript-deku.git",
+      "rev": "98c67533cc8c399aa643b495d3c02bab963e5b80",
+      "subdir": "deku-css",
       "dependencies": [
         "hyrule",
         "untagged-union"
@@ -1100,7 +1163,7 @@
     "deku-dom": {
       "type": "git",
       "url": "https://github.com/mikesol/purescript-deku.git",
-      "rev": "276f48adde3d9354f61917f7e9ae2ae7b43df6b2",
+      "rev": "98c67533cc8c399aa643b495d3c02bab963e5b80",
       "subdir": "deku-dom",
       "dependencies": [
         "hyrule",
@@ -1404,7 +1467,7 @@
     "hyrule": {
       "type": "git",
       "url": "https://github.com/mikesol/purescript-hyrule.git",
-      "rev": "a2a32e02a0d8518d906ec5fb3192261f63667338",
+      "rev": "fcbaa505faaedd06e547e33efda1275deca05448",
       "dependencies": [
         "avar",
         "effect",
@@ -2015,6 +2078,15 @@
         "unfoldable"
       ]
     },
+    "quickcheck-laws": {
+      "type": "registry",
+      "version": "7.0.0",
+      "integrity": "sha256-rnzVTiDnymzYkvnhI8EvPwrmO8LgcTnrMTuiI172Tkc=",
+      "dependencies": [
+        "enums",
+        "quickcheck"
+      ]
+    },
     "random": {
       "type": "registry",
       "version": "6.0.0",
@@ -2212,6 +2284,19 @@
         "refs"
       ]
     },
+    "these": {
+      "type": "registry",
+      "version": "6.0.0",
+      "integrity": "sha256-6poQvFzGw7Ir9mTDEbFV9N6+cUeSHe0FdzTR2ZK1o6g=",
+      "dependencies": [
+        "arrays",
+        "gen",
+        "lists",
+        "quickcheck",
+        "quickcheck-laws",
+        "tuples"
+      ]
+    },
     "tidy": {
       "type": "git",
       "url": "https://github.com/natefaubion/purescript-tidy.git",
@@ -2277,6 +2362,14 @@
         "tuples",
         "type-equality",
         "unicode"
+      ]
+    },
+    "tldr": {
+      "type": "git",
+      "url": "https://github.com/mikesol/purescript-tldr.git",
+      "rev": "7945d3f41d16035774e1eedd1a239aaeccc9fbab",
+      "dependencies": [
+        "prelude"
       ]
     },
     "transformers": {

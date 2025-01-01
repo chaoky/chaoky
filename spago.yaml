@@ -11,8 +11,10 @@ package:
     - arraybuffer
     - avar
     - canvas
+    - css
     - deku-core
     - deku-dom
+    - deku-css
     - fetch
     - filterable
     - free
@@ -30,14 +32,19 @@ package:
     - web-touchevents
     - yoga-fetch
     - yoga-json
+    - tldr
 
 workspace:
   packageSet:
     registry: 62.2.0
   extraPackages:
+    tldr:
+      git: "https://github.com/mikesol/purescript-tldr.git"
+      ref: "7945d3f"
+      dependencies: [prelude]
     hyrule:
       git: "https://github.com/mikesol/purescript-hyrule.git"
-      ref: "a2a32e0"
+      ref: "v2.5.1"
       dependencies:
         - avar
         - effect
@@ -49,14 +56,21 @@ workspace:
     deku-core:
       git: "https://github.com/mikesol/purescript-deku.git"
       subdir: deku-core
-      ref: "276f48adde3d9354f61917f7e9ae2ae7b43df6b2"
+      ref: "v0.12.1"
       dependencies:
         - hyrule
         - untagged-union
     deku-dom:
       git: "https://github.com/mikesol/purescript-deku.git"
       subdir: deku-dom
-      ref: "276f48adde3d9354f61917f7e9ae2ae7b43df6b2"
+      ref: "v0.12.1"
+      dependencies:
+        - hyrule
+        - untagged-union
+    deku-css:
+      git: "https://github.com/mikesol/purescript-deku.git"
+      subdir: deku-css
+      ref: "v0.12.1"
       dependencies:
         - hyrule
         - untagged-union
@@ -157,4 +171,3 @@ workspace:
         - "safe-coerce"
         - "strings"
         - "tuples"
-
