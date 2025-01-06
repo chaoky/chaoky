@@ -12,9 +12,10 @@ package:
     - avar
     - canvas
     - css
+    - debug
     - deku-core
-    - deku-dom
     - deku-css
+    - deku-dom
     - fetch
     - filterable
     - free
@@ -27,12 +28,12 @@ package:
     - stringutils
     - substitute
     - tidy-codegen
+    - tldr
     - uint
     - web-pointerevents
     - web-touchevents
     - yoga-fetch
     - yoga-json
-    - tldr
 
 workspace:
   packageSet:
@@ -41,7 +42,7 @@ workspace:
     tldr:
       git: "https://github.com/mikesol/purescript-tldr.git"
       ref: "7945d3f"
-      dependencies: [prelude]
+      dependencies: [ prelude ]
     hyrule:
       git: "https://github.com/mikesol/purescript-hyrule.git"
       ref: "v2.5.1"
