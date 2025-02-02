@@ -1,11 +1,15 @@
 module Main where
 
-import CSS (LengthUnit, Size, absolute, alignItems, backgroundImage, backgroundPosition, column, display, flex, flexDirection, height, left, offset, position, positioned, px, top, transform, translate, url, width, zIndex)
-import CSS.Common (center)
+import Prelude
+
+import CSS as CSS
+import CSS.Common as CSM
 import Control.Monad.ST.Class (liftST)
 import Data.Either (either)
-import Data.Int (toNumber)
+import Data.List.Lazy (head)
+import Data.Maybe (fromMaybe)
 import Data.Tuple.Nested ((/\))
+import Debug (trace)
 import Deku.CSS (render)
 import Deku.Core (Nut, useState)
 import Deku.DOM as D
@@ -20,15 +24,15 @@ import FRP.Event.AnimationFrame (animationFrame')
 import FRP.Event.Mouse (getMouse, withPosition)
 import FRP.Poll (Poll, sham)
 import Foreign (Foreign)
-import Move (CurrentPos, MousePos, followUpdate, initialPos)
-import Prelude (class Show, Unit, bind, discard, map, negate, not, pure, show, (#), ($), (*>), (<#>), (<<<), (>>>))
+import Move (MousePos, ObjectState, followUpdate, initialState)
+import Sprite (spriteName)
 import Yoga.JSON (read, writeImpl)
 
 app :: Event MousePos -> Nut
 app event = Deku.do
   setNumber /\ number <- useState true
   D.div
-    [ DA.style_ $ render $ display flex *> flexDirection column *> alignItems center ]
+    [ DA.style_ $ render $ CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center ]
     [ D.h1__ "Leo's Camp"
     , D.button [ DL.runOn DL.click $ number <#> not >>> setNumber ] [ D.text_ "Count Toggle" ]
     , D.p_ [ text number ]
@@ -37,33 +41,21 @@ app event = Deku.do
 
 followNut :: Event MousePos -> Nut
 followNut event = D.div
-  [ DA.style $ sham $ (fold followUpdate initialPos event) <#> followCss ]
+  [ DA.style $ sham $ (fold followUpdate initialState event) <#> drawSprite ]
   []
 
-data Action = Idle | Left | Right
-type Sprite = { x :: Size LengthUnit, y :: Size LengthUnit }
-
-sprite :: Action -> Sprite
-sprite a =
-  let
-    s = case a of
-      Idle -> { x: -96, y: -96 }
-      Left -> { x: -96, y: -96 }
-      Right -> { x: -96, y: -96 }
-  in
-    { x: px $ toNumber s.x, y: px $ toNumber s.y }
-
-followCss :: CurrentPos -> String
-followCss pos = render do
-  backgroundImage $ url "https://choco.rip/images/oneko.gif"
-  backgroundPosition $ positioned (px (-96.0)) (px (-96.0))
-  position absolute
-  transform (translate (px pos.x) (px pos.y))
-  zIndex 999
-  width (px 32.0)
-  height (px 32.0)
-  top (px 0.0)
-  left (px 0.0)
+drawSprite :: ObjectState -> String
+drawSprite { position, spriteState } = render do
+  let point = fromMaybe { x: 0.0, y: 0.0 } $ head spriteState.points
+  CSS.backgroundImage $ CSS.url spriteName
+  CSS.backgroundPosition $ CSS.positioned (CSS.px $ point.x) (CSS.px point.y)
+  CSS.position CSS.absolute
+  CSS.transform (CSS.translate (CSS.px position.x) (CSS.px position.y))
+  CSS.zIndex 999
+  CSS.width (CSS.px 32.0)
+  CSS.height (CSS.px 32.0)
+  CSS.top (CSS.px 0.0)
+  CSS.left (CSS.px 0.0)
 
 text :: forall (a ∷ Type). Show a ⇒ Poll a → Nut
 text = D.text <<< map show
