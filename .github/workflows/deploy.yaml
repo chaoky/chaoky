@@ -2,14 +2,31 @@ name: Deploy
 on:
   push:
     branches: [main]
-    paths:
-      - "compose.yaml"
   workflow_dispatch:
 
 jobs:
-  deploy:
+  server:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - run: docker compose up -d --remove-orphans
       - run: docker system prune --all --force
+  
+  camp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: camp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 23
+          cache: npm
+          cache-dependency-path: camp/package-lock.json
+      - run: npm ci
+      - run: npm run release
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages deploy camp/dist --project-name=camp
