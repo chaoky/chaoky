@@ -30,12 +30,10 @@ import Yoga.JSON (read, writeImpl)
 
 app :: Event MousePos -> Nut
 app event = Deku.do
-  setNumber /\ number <- useState true
   D.div
     [ DA.style_ $ render $ CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center ]
-    [ D.h1__ "Leo's Camp"
-    , D.button [ DL.runOn DL.click $ number <#> not >>> setNumber ] [ D.text_ "Count Toggle" ]
-    , D.p_ [ text number ]
+    [ D.h4__ "Camp Leo"
+    , D.pre__ art
     , followNut event
     ]
 
@@ -59,6 +57,21 @@ drawSprite { position, spriteState } = render do
 
 text :: forall (a ∷ Type). Show a ⇒ Poll a → Nut
 text = D.text <<< map show
+
+art :: String
+art =
+  """
+                                )                
+                               ( `(
+                             `')    )  
+                             `(    ( 
+     ___________               ) /\ ( 
+    /         / \            (  // | (`
+   /         /   \         _ -.;_/ \\--._ 
+  /         /     \       (_;-// | \ \-'.\ 
+ /_________/-------\_     ( `.__ _  ___,')  
+"         "                `'(_ )_)(_)_)'
+  """
 
 -- setup --
 

@@ -2,12 +2,13 @@ module Move where
 
 import Prelude
 
-import CSS (distance)
 import Data.Int (toNumber)
-import Data.Maybe (Maybe(..))
-import Data.Number (abs, cos, sin)
+import Data.List.Lazy (uncons)
+import Data.Maybe (Maybe(..), fromJust, fromMaybe)
+import Data.Number (abs, cos, sin, (%))
 import Debug (trace)
 import Misc (Point, getDistance, getRotation, normalizeAngle)
+import Partial.Unsafe (unsafePartial)
 import Sprite as S
 
 initialState :: ObjectState
@@ -15,12 +16,14 @@ initialState =
   { position: { x: 110.0, y: 110.0 }
   , spriteState: S.getState S.Idle
   , rotation: 0.0
+  , tick: 0.0
   }
 
 type ObjectState =
   { position :: Point
   , spriteState :: S.State
   , rotation :: Number
+  , tick :: Number
   }
 
 type MousePos = Maybe { x :: Int, y :: Int }
@@ -29,6 +32,7 @@ followUpdate :: ObjectState -> MousePos -> ObjectState
 followUpdate current Nothing = current
 followUpdate current (Just mouse_) =
   let
+    tick = if current.tick < 100.0 then current.tick + 0.25 else 0.0
     mouse = { x: toNumber mouse_.x, y: toNumber mouse_.y }
     distance = getDistance current.position mouse
 
@@ -41,12 +45,16 @@ followUpdate current (Just mouse_) =
     x = current.position.x + ax
     y = current.position.y + ay
 
-    _ = trace (distance) \_ -> unit
-
     sprite = if abs ax + abs ay == 0.0 then S.Idle else rotation # S.spriteFromAngle
     spriteState =
       if sprite == current.spriteState.sprite then
-        current.spriteState
+        if tick % 2.0 == 0.0 then
+          let
+            { head, tail } = unsafePartial $ fromJust $ uncons current.spriteState.points
+          in
+            current.spriteState { points = tail }
+        else
+          current.spriteState
       else sprite # S.getState
   in
-    { position: { x, y }, spriteState, rotation }
+    { position: { x, y }, spriteState, rotation, tick }
