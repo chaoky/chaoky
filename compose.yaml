@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v2.8"
+    image: "traefik:v3"
     restart: always
     command:
       - "--providers.docker=true"
