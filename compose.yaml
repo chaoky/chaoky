@@ -5,9 +5,9 @@ services:
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--certificatesresolvers.flamingos.acme.tlschallenge=true"
-      - "--certificatesresolvers.flamingos.acme.email=levimanga@gmail.com"
-      - "--certificatesresolvers.flamingos.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.camp.acme.tlschallenge=true"
+      - "--certificatesresolvers.camp.acme.email=levimanga@gmail.com"
+      - "--certificatesresolvers.camp.acme.storage=/letsencrypt/acme.json"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.websecure.asDefault=true"
     ports:
@@ -36,7 +36,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wakapi.rule=Host(`waka.leo.camp`)"
-      - "traefik.http.routers.wakapi.tls.certresolver=flamingos"
+      - "traefik.http.routers.wakapi.tls.certresolver=camp"
     environment:
       WAKAPI_PASSWORD_SALT: "IVFONzh7Vk55l1TJOzzd2zPrwLtiYw0i"
       ENVIRONMENT: "prod"
