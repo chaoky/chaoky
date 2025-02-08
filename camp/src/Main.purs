@@ -31,11 +31,22 @@ import Yoga.JSON (read, writeImpl)
 app :: Event MousePos -> Nut
 app event = Deku.do
   D.div
-    [ DA.style_ $ render $ CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center ]
-    [ D.h4__ "Camp Leo"
+    [ DA.style_ $ render $ displayFlex ]
+    [ D.h4__ "Leo :: Camp"
     , D.pre__ art
     , followNut event
+    , D.div [ DA.style_ $ render $ displayFlex ]
+        [ link "https://github.com/chaoky" "github"
+        , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
+        , link "https://bsky.app/profile/leo.camp" "bluesky"
+        ]
     ]
+
+link :: String -> String -> Nut
+link href label = D.a [ DA.href_ href, DA.target_ "__blank" ] [ D.text_ label ]
+
+displayFlex :: CSS.StyleM Unit
+displayFlex = CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center
 
 followNut :: Event MousePos -> Nut
 followNut event = D.div
