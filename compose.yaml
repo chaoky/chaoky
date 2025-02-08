@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: "traefik:v3"
+    image: "traefik:v2.8"
     restart: always
     command:
       - "--providers.docker=true"
@@ -9,7 +9,6 @@ services:
       - "--certificatesresolvers.camp.acme.email=levimanga@gmail.com"
       - "--certificatesresolvers.camp.acme.storage=/letsencrypt/acme.json"
       - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asDefault=true"
     ports:
       - "443:443"
     volumes:
@@ -37,6 +36,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wakapi.rule=Host(`waka.leo.camp`)"
       - "traefik.http.routers.wakapi.tls.certresolver=camp"
+      - "traefik.http.routers.wakapi.entrypoints=websecure"
     environment:
       WAKAPI_PASSWORD_SALT: "IVFONzh7Vk55l1TJOzzd2zPrwLtiYw0i"
       ENVIRONMENT: "prod"
