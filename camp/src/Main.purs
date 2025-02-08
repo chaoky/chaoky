@@ -44,9 +44,8 @@ followNut event = D.div
 
 drawSprite :: ObjectState -> String
 drawSprite { position, spriteState } = render do
-  let point = fromMaybe { x: 0.0, y: 0.0 } $ head spriteState.points
   CSS.backgroundImage $ CSS.url spriteName
-  CSS.backgroundPosition $ CSS.positioned (CSS.px $ point.x) (CSS.px point.y)
+  CSS.backgroundPosition $ CSS.positioned (CSS.px $ spriteState.point.x) (CSS.px spriteState.point.y)
   CSS.position CSS.absolute
   CSS.transform (CSS.translate (CSS.px position.x) (CSS.px position.y))
   CSS.zIndex 999
