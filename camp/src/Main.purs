@@ -64,6 +64,10 @@ drawSprite { position, spriteState } = render do
   CSS.height (CSS.px 32.0)
   CSS.top (CSS.px 0.0)
   CSS.left (CSS.px 0.0)
+  imageRendering "pixelated"
+
+imageRendering :: String -> CSS.StyleM Unit
+imageRendering = CSS.key $ CSS.fromString "image-rendering"
 
 text :: forall (a ∷ Type). Show a ⇒ Poll a → Nut
 text = D.text <<< map show
