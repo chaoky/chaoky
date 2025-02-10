@@ -3,11 +3,8 @@ module Main where
 import Prelude
 
 import CSS as CSS
-import CSS.Common as CSM
 import Control.Monad.ST.Class (liftST)
 import Data.Either (either)
-import Data.List.Lazy (head)
-import Data.Maybe (fromMaybe)
 import Data.Tuple.Nested ((/\))
 import Debug (trace)
 import Deku.CSS (render)
@@ -15,8 +12,8 @@ import Deku.Core (Nut, useState)
 import Deku.DOM as D
 import Deku.DOM.Attributes as DA
 import Deku.DOM.Listeners as DL
-import Deku.Do as Deku
 import Deku.Toplevel (SSROutput, hydrateInBody, ssrInBody)
+import Draw as Draw
 import Effect (Effect)
 import Effect.Exception (throw)
 import FRP.Event (Event, create, fold)
@@ -24,6 +21,7 @@ import FRP.Event.AnimationFrame (animationFrame')
 import FRP.Event.Mouse (getMouse, withPosition)
 import FRP.Poll (Poll, sham)
 import Foreign (Foreign)
+import Misc (displayFlex, fullscreen, gap, imageRendering)
 import Move (MousePos, ObjectState, followUpdate, initialState)
 import Sprite (spriteName)
 import Yoga.JSON (read, writeImpl)
@@ -31,7 +29,7 @@ import Yoga.JSON (read, writeImpl)
 app :: Event MousePos -> Nut
 app event = Deku.do
   D.div
-    [ DA.style_ $ render $ displayFlex ]
+    [ DA.style_ $ render $ displayFlex *> fullscreen *> gap "20px" ]
     [ D.h4__ "Leo :: Camp"
     , D.pre__ art
     , followNut event
@@ -40,13 +38,11 @@ app event = Deku.do
         , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
         , link "https://bsky.app/profile/leo.camp" "bluesky"
         ]
+    , Draw.canva
     ]
 
 link :: String -> String -> Nut
 link href label = D.a [ DA.href_ href, DA.target_ "__blank" ] [ D.text_ label ]
-
-displayFlex :: CSS.StyleM Unit
-displayFlex = CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center
 
 followNut :: Event MousePos -> Nut
 followNut event = D.div
@@ -66,24 +62,21 @@ drawSprite { position, spriteState } = render do
   CSS.left (CSS.px 0.0)
   imageRendering "pixelated"
 
-imageRendering :: String -> CSS.StyleM Unit
-imageRendering = CSS.key $ CSS.fromString "image-rendering"
-
 text :: forall (a ∷ Type). Show a ⇒ Poll a → Nut
 text = D.text <<< map show
 
 art :: String
 art =
   """
-                                )                
+                                ) 
                                ( `(
                              `')    )  
                              `(    ( 
      ___________               ) /\ ( 
     /         / \            (  // | (`
    /         /   \         _ -.;_/ \\--._ 
-  /         /     \       (_;-// | \ \-'.\ 
- /_________/-------\_     ( `.__ _  ___,')  
+  /         /     \       (_;-// | \ \-'.\
+ /_________/-------\_     ( `.__ _  ___,')
 "         "                `'(_ )_)(_)_)'
   """
 

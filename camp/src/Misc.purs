@@ -2,7 +2,12 @@ module Misc where
 
 import Prelude
 
+import CSS as CSS
+import CSS.Common as CSM
 import Data.Number (atan2, pi, sqrt)
+import Deku.Attribute (Attribute)
+import Deku.CSS (render)
+import Deku.DOM.Attributes as DA
 
 type Point = { x :: Number, y :: Number }
 
@@ -40,3 +45,19 @@ normalizeAngle angle
   | angle > pi = angle - 2.0 * pi
   | angle < -pi = angle + 2.0 * pi
   | otherwise = angle
+
+displayFlex :: CSS.StyleM Unit
+displayFlex = CSS.display CSS.flex *> CSS.flexDirection CSS.column *> CSS.alignItems CSM.center
+
+css :: forall (r ∷ Row Type) (f ∷ Type -> Type). Applicative f ⇒ CSS.StyleM Unit → f (Attribute (style ∷ String | r))
+css x = DA.style_ $ render x
+
+imageRendering :: String -> CSS.StyleM Unit
+imageRendering = CSS.key $ CSS.fromString "image-rendering"
+
+gap :: String -> CSS.StyleM Unit
+gap = CSS.key $ CSS.fromString "gap"
+
+fullscreen :: CSS.StyleM Unit
+fullscreen = CSS.minWidth (CSS.vw 100.0) *> CSS.maxWidth (CSS.vw 100.0)
+
