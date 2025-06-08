@@ -1,9 +1,12 @@
+#!/usr/bin/env python3.12
+
 import asyncio
 from datetime import date, timedelta
 from itertools import batched, chain
 import json
 import ssl
 from typing import Awaitable, Iterable, TypedDict, cast
+import sys
 
 
 async def mkLichessRequest(path: str):
@@ -145,3 +148,26 @@ def generate_rating_csv_for_top_50_classical_players() -> None:
         print("wrote to out.csv")
 
     asyncio.run(do())
+
+
+if __name__ == "__main__":
+    options = {
+        "1": print_top_50_classical_players,
+        "2": print_last_30_day_rating_for_top_player,
+        "3": generate_rating_csv_for_top_50_classical_players,
+    }
+
+    if len(sys.argv) != 2 or sys.argv[1] not in options.keys():
+        print(
+            "\n".join(
+                [
+                    "expected one int argument out of:",
+                    "1: print top 50 classical players",
+                    "2: print last 30 day rating for top player",
+                    "3: generate rating csv for top 50 classical players",
+                ]
+            )
+        )
+        exit(1)
+
+    options[sys.argv[1]]()
