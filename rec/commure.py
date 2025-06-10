@@ -57,27 +57,20 @@ async def getRatingHistory(username: str):
 
 def mkRatingHistoryByDay(history: list[RatingHistory], today: date, perfType: str):
     ratings = next((h for h in history if h["name"] == perfType))
+    points = ratings["points"]
     last30days: list[int] = []
-    current = len(ratings["points"]) - 1
 
-    while True:
-        if current < 0:
-            break
-
-        year, month, day, rating = ratings["points"][current]
-        scoreDate = date(year, month + 1, day)
-        if today < scoreDate:
-            current -= 1
+    for i in range(31):
+        if len(points) == 0:
+            last30days.append(-1)
             continue
 
+        [year, month, day, rating] = points[-1]
+        timeElapsed = today - date(year, month + 1, day)
+        if timeElapsed.days < i:
+            [_, _, _, rating] = points.pop()
+
         last30days.append(rating)
-
-        timeElapsed = today - scoreDate
-        if timeElapsed.days < len(last30days) - 1:
-            current -= 1
-
-        if len(last30days) == 31:
-            break
 
     return last30days
 
@@ -101,7 +94,7 @@ def print_top_50_classical_players() -> None:
 # This can be in the format: username, {today-29: 990, today-28: 991, etc}
 def print_last_30_day_rating_for_top_player() -> None:
     async def do():
-        today = date(2025, 5, 30)
+        today = date.today()
         leaderboard = await getOneLeaderboard(1, "classical")
         top1 = leaderboard["users"][0]["username"]
         history = await getRatingHistory(top1)
@@ -128,7 +121,7 @@ def print_last_30_day_rating_for_top_player() -> None:
 # notagm,900,900,900,...,900
 def generate_rating_csv_for_top_50_classical_players() -> None:
     async def do():
-        today = date(2025, 5, 30)
+        today = date.today()
         leaderboard = await getOneLeaderboard(50, "classical")
         ratings = await buffered10(
             getRatingHistory(user["username"]) for user in leaderboard["users"]
@@ -160,12 +153,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2 or sys.argv[1] not in options.keys():
         print(
             "\n".join(
-                [
-                    "expected one int argument out of:",
-                    "1: print top 50 classical players",
-                    "2: print last 30 day rating for top player",
-                    "3: generate rating csv for top 50 classical players",
-                ]
+                f"{k}: {v.__name__.replace('_', ' ')}" for k, v in options.items()
             )
         )
         exit(1)
