@@ -21,12 +21,12 @@ async def mkLichessRequest(path: str):
     message = await reader.read()
     await writer.wait_closed()
 
-    head, _, body = message.rpartition(b"\r\n")
+    _, _, body = message.rpartition(b"\r\n")
     try:
         parsed = cast(object, json.loads(body))
         return parsed
     except json.JSONDecodeError:
-        err = f"invalid json body from {host}{path}\r\nstatus: {head.decode()}"
+        err = f"invalid json body from {host}{path}\r\nstatus: {message.decode()}"
         raise Exception(err)
 
 
@@ -93,21 +93,19 @@ def print_top_50_classical_players() -> None:
 # Part 2: Print the rating history for the top chess player in classical chess for the las t 30 calendar days.
 # This can be in the format: username, {today-29: 990, today-28: 991, etc}
 def print_last_30_day_rating_for_top_player() -> None:
-    async def do():
-        today = date.today()
-        leaderboard = await getOneLeaderboard(1, "classical")
-        top1 = leaderboard["users"][0]["username"]
-        history = await getRatingHistory(top1)
-        ratingByDay = mkRatingHistoryByDay(history, today, "Classical")
-        print(
-            top1,
-            ",".join(
-                f"\r\n{today - timedelta(days=i)} : {rating}"
-                for i, rating in enumerate(ratingByDay)
-            ),
-        )
+    today = date.today()
+    leaderboard = asyncio.run(getOneLeaderboard(1, "classical"))
+    top1 = leaderboard["users"][0]["username"]
+    history = asyncio.run(getRatingHistory(top1))
+    ratingByDay = mkRatingHistoryByDay(history, today, "Classical")
 
-    asyncio.run(do())
+    print(
+        top1,
+        ",".join(
+            f"\r\n{today - timedelta(days=i)} : {rating}"
+            for i, rating in enumerate(ratingByDay)
+        ),
+    )
 
 
 # Part 3: Create a CSV that shows the rating history for each of these 50 players, for the last 30 days.
@@ -120,27 +118,24 @@ def print_last_30_day_rating_for_top_player() -> None:
 # bob,1231,1158,1250,...,1290
 # notagm,900,900,900,...,900
 def generate_rating_csv_for_top_50_classical_players() -> None:
-    async def do():
-        today = date.today()
-        leaderboard = await getOneLeaderboard(50, "classical")
-        ratings = await buffered10(
-            getRatingHistory(user["username"]) for user in leaderboard["users"]
-        )
+    today = date.today()
+    leaderboard = asyncio.run(getOneLeaderboard(50, "classical"))
+    ratings = asyncio.run(
+        buffered10(getRatingHistory(user["username"]) for user in leaderboard["users"])
+    )
+    head = chain(
+        ["username"], (str(today - timedelta(days=i)) for i in range(30, -1, -1))
+    )
 
-        head = chain(
-            ["username"], (str(today - timedelta(days=i)) for i in range(30, -1, -1))
-        )
-        with open("out.csv", "w+") as f:
-            _ = f.write(",".join(head))
-            for user, rating in zip(leaderboard["users"], ratings):
-                ratingByDay = mkRatingHistoryByDay(rating, today, "Classical")
-                ratingByDay.reverse()
-                format = f"\n{user['username']},{','.join(str(rating) for rating in ratingByDay)}"
-                _ = f.write(format)
+    with open("out.csv", "w+") as f:
+        _ = f.write(",".join(head))
+        for user, rating in zip(leaderboard["users"], ratings):
+            ratingByDay = mkRatingHistoryByDay(rating, today, "Classical")
+            ratingByDay.reverse()
+            format = f"\n{user['username']},{','.join(str(rating) for rating in ratingByDay)}"
+            _ = f.write(format)
 
-        print("wrote to out.csv")
-
-    asyncio.run(do())
+    print("wrote to out.csv")
 
 
 if __name__ == "__main__":
