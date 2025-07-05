@@ -2,7 +2,11 @@ module Main where
 
 import Prelude
 
+import ArtAscii as ArtAscii
+import CSS (noneTextDecoration, rgb, textDecoration)
 import CSS as CSS
+import CSS.Common (none)
+import CSS.Font (color)
 import Control.Monad.ST.Class (liftST)
 import Data.Either (either)
 import Data.Tuple.Nested ((/\))
@@ -14,7 +18,6 @@ import Deku.DOM.Attributes as DA
 import Deku.DOM.Listeners as DL
 import Deku.Toplevel (SSROutput, hydrateInBody, ssrInBody)
 import Draw as Draw
-import ArtAscii as ArtAscii
 import Effect (Effect)
 import Effect.Exception (throw)
 import FRP.Event (Event, create, fold)
@@ -22,7 +25,7 @@ import FRP.Event.AnimationFrame (animationFrame')
 import FRP.Event.Mouse (getMouse, withPosition)
 import FRP.Poll (Poll, sham)
 import Foreign (Foreign)
-import Misc (displayFlex, fullscreen, gap, imageRendering)
+import Misc (css, displayFlex, fullscreen, gap, imageRendering)
 import Move (MousePos, ObjectState, followUpdate, initialState)
 import Sprite (spriteName)
 import Yoga.JSON (read, writeImpl)
@@ -32,18 +35,22 @@ app event = Deku.do
   D.div
     [ DA.style_ $ render $ displayFlex *> fullscreen *> gap "20px" ]
     [ D.h4__ "Leo :: Camp"
-    , D.pre__ art
     , followNut event
+    , ArtAscii.canva (event <#> (\_ -> unit))
     , D.div [ DA.style_ $ render $ displayFlex ]
         [ link "https://github.com/chaoky" "github"
         , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
         , link "https://bsky.app/profile/leo.camp" "bluesky"
         ]
-    , ArtAscii.canva (event <#> (\_ -> unit))
     ]
 
 link :: String -> String -> Nut
-link href label = D.a [ DA.href_ href, DA.target_ "__blank" ] [ D.text_ label ]
+link href label = D.a
+  [ DA.href_ href
+  , DA.target_ "__blank"
+  , css $ textDecoration noneTextDecoration *> color (rgb 0 0 0)
+  ]
+  [ D.text_ label ]
 
 followNut :: Event MousePos -> Nut
 followNut event = D.div
