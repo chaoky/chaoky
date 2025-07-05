@@ -32,7 +32,7 @@ initialState =
 
 update :: ObjectState -> Unit -> ObjectState
 update current _event
-  | current.elapsed < 1.0 = current { index = current.index, elapsed = current.elapsed + 0.3 }
+  | current.elapsed < 1.0 = current { index = current.index, elapsed = current.elapsed + 0.2 }
   | otherwise =
       let
         index = if current.index + 1 == length bonfire then 0 else current.index + 1
@@ -179,7 +179,13 @@ rawBonfire =
                                                                                                      
                                                                                                      
 
-                                                                                                     
+  
+
+
+
+
+
+
                                                                                                      
                                                                                                      
                                                                                                      
