@@ -2,22 +2,19 @@ module ArtAscii where
 
 import Prelude
 
-import CSS (fontSize, height, textWhitespace, whitespacePreWrap)
+import CSS (Color, fontSize, textWhitespace, whitespacePreWrap)
+import CSS.Color (rgb)
+import CSS.Font (color)
 import CSS.Overflow (hidden, overflowY)
 import CSS.Size (px)
-import Data.Array (index, length)
-import Data.Maybe (Maybe, fromMaybe)
-import Data.NonEmpty (NonEmpty, oneOf, singleton, (:|))
-import Data.String (splitAt)
 import Data.String.Utils (lines)
 import Deku.CSS (render)
-import Deku.Core (Nut)
 import Deku.DOM as D
 import Deku.DOM.Attributes as DA
-import Deku.Hooks ((<#~>))
+import Deku.Hooks (Nut, (<#~>))
 import FRP.Event (Event, fold)
 import FRP.Poll (Poll, sham)
-import Partial.Unsafe (unsafeCrashWith)
+import Node.FS (FileFlags(..))
 
 type ObjectState =
   { index :: Int
@@ -35,7 +32,7 @@ update current _event
   | current.elapsed < 1.0 = current { index = current.index, elapsed = current.elapsed + 0.2 }
   | otherwise =
       let
-        index = if current.index + 1 == length bonfire then 0 else current.index + 1
+        index = if frame current.index == "" then 0 else current.index + 1
       in
         { index, elapsed: 0.0 }
 
@@ -49,40 +46,44 @@ canva event =
       [ renderBonfireFrame $ getBonfireFrame <$> getIndex ]
 
 renderBonfireFrame :: Poll (Array String) -> Nut
-renderBonfireFrame p = p <#~>
-  ( \a -> D.code [ DA.style_ $ render $ overflowY hidden *> textWhitespace whitespacePreWrap *> fontSize (px 5.0) ] $ a <#>
-      (\x -> D.div [ DA.style_ $ render $ textWhitespace whitespacePreWrap ] [ D.text_ x ])
-  )
+renderBonfireFrame p = p <#~> renderFrame
 
-getBonfireFrame :: ObjectState -> Array String
-getBonfireFrame state = fromMaybe ([]) (index bonfire state.index)
+renderFrame :: Array String -> Nut
+renderFrame lines =
+  D.code
+    [ DA.style_ $ render
+        $ overflowY hidden
+            *> textWhitespace whitespacePreWrap
+            *> fontSize (px 5.0)
+    ]
+    $ lines <#> renderLine
 
-bonfire :: Array (Array String)
-bonfire = oneOf $ nutLines $ bonfireFrames rawBonfire
+renderLine :: String -> Nut
+renderLine line =
+  D.div
+    [ DA.style_ $ render
+        $ textWhitespace whitespacePreWrap
+            *> color (getCharColor line)
+    ]
+    [ D.span__ line ]
+  -- $ toCharArray line <#> span
+  where
+  span x = D.span [ DA.style_ $ render $ color $ getCharColor x ] [ D.text_ x ]
 
-nutLines :: forall a. Functor a => a String -> a (Array String)
-nutLines frames = frames <#> lines
+getCharColor :: String -> Color
+getCharColor char
+  | char == "%" = (rgb 225 0 0)
+  | otherwise = (rgb 0 0 0)
 
-bonfireFrames :: String -> NonEmpty Array String
-bonfireFrames raw = splitEvery (102 * 101) raw
+type BonfireFrame = Array String
 
-splitEvery :: Int -> String -> NonEmpty Array String
-splitEvery offset x =
-  let
-    { before, after } = splitAt offset x
-  in
-    if after == "" then singleton before
-    else before :| oneOf (splitEvery offset after)
+getBonfireFrame :: ObjectState -> BonfireFrame
+getBonfireFrame state = frame state.index # lines
 
-rawBonfire :: String
-rawBonfire =
+frame :: Int -> String
+
+frame 0 =
   """
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
                                                                                                      
                                                                                                      
                                                                                                      
@@ -170,27 +171,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------:----------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-  
-
-
-
-
-
-
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 1 =
+  """
                                                  +=====                                              
                                                  +=====                                              
                                                   ++++=                                              
@@ -278,21 +262,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------:----------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 2 =
+  """
                                                   ==                                                 
                                                   ==                                                 
                                                   ++==                                               
@@ -380,21 +353,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------::---------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 3 =
+  """
                                                                                                      
                                                                                                      
                                                                                                      
@@ -482,21 +444,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------:----------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 4 =
+  """
                                                                                                      
                                                                                                      
                                                                                                      
@@ -584,15 +535,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------::---------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
+frame 5 =
+  """
                                                                                                      
                                                                                                      
                                                                                                      
@@ -605,12 +551,6 @@ rawBonfire =
                                                                                                      
                                                                                                      
                                                                                                      
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                 ==                                                  
                                                  ==                                                  
                                                  ===                                                 
                                                  ===                                                 
@@ -686,21 +626,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------::---------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 6 =
+  """
                                                                                                      
                                                                                                      
                                                                                                      
@@ -788,21 +717,10 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------::---------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+ """
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+frame 7 =
+  """
                                                                                                      
                                                                                                      
                                                                                                      
@@ -890,13 +808,6 @@ rawBonfire =
                                ----===:-=========:-=========:-===---                                 
                                ----===:-=========:-=========:-===---                                 
                                  -----:----------:----------::----                                   
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
- 
+ """
 
-"""
+frame _ = ""

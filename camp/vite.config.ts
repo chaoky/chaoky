@@ -1,14 +1,14 @@
 import { defineConfig, Plugin } from "vite";
-import { generate } from "./output/Main"
-import jsdomGlobal from 'jsdom-global'
+import { generate } from "./output/Main";
+import jsdomGlobal from "jsdom-global";
 
 jsdomGlobal();
 
-type SSROutput = { html: string, boring: Object, livePortals: Object }
+type SSROutput = { html: string; boring: Object; livePortals: Object };
 
 export default defineConfig({
   server: {
-    port: 12345
+    port: 12345,
   },
   plugins: [Thing()],
 });
@@ -31,11 +31,16 @@ function Thing(): Plugin {
         return {
           html,
           tags: [
-            { tag: "script", injectTo: "head", attrs: { type: "module" }, children: hydrate },
-            { tag: "div", injectTo: "body", children: cache.html }
-          ]
-        }
-      }
-    }
-  }
+            {
+              tag: "script",
+              injectTo: "head",
+              attrs: { type: "module" },
+              children: hydrate,
+            },
+            { tag: "div", injectTo: "body", children: cache.html },
+          ],
+        };
+      },
+    },
+  };
 }
