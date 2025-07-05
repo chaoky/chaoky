@@ -14,6 +14,7 @@ import Deku.DOM.Attributes as DA
 import Deku.DOM.Listeners as DL
 import Deku.Toplevel (SSROutput, hydrateInBody, ssrInBody)
 import Draw as Draw
+import ArtAscii as ArtAscii
 import Effect (Effect)
 import Effect.Exception (throw)
 import FRP.Event (Event, create, fold)
@@ -38,7 +39,7 @@ app event = Deku.do
         , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
         , link "https://bsky.app/profile/leo.camp" "bluesky"
         ]
-    , Draw.canva
+    , ArtAscii.canva (event <#> (\_ -> unit))
     ]
 
 link :: String -> String -> Nut

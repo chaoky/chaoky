@@ -7,6 +7,9 @@ jsdomGlobal();
 type SSROutput = { html: string, boring: Object, livePortals: Object }
 
 export default defineConfig({
+  server: {
+    port: 12345
+  },
   plugins: [Thing()],
 });
 
