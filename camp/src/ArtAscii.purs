@@ -55,7 +55,7 @@ renderFrame lines =
     [ DA.style_ $ render
         $ overflowY hidden
             *> textWhitespace whitespacePreWrap
-            *> fontSize (px 7.0)
+            *> fontSize (px 5.0)
     ]
     $ lines <#> renderLine
 
@@ -74,12 +74,7 @@ renderLine line =
 
 getCharColor :: String -> Color
 getCharColor char
-  | char == "%" = (rgb 250 192 0)
-  | char == "#" = (rgb 255 117 0)
-  | char == "*" = (rgb 252 100 0)
-  | char == "+" = (rgb 215 53 2)
-  | char == "-" = (rgb 123 63 0)
-  | otherwise = (rgb 149 69 53)
+  | otherwise = (rgb 0 0 0)
 
 type BonfireFrame = Array String
 

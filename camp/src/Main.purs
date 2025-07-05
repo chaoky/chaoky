@@ -3,21 +3,16 @@ module Main where
 import Prelude
 
 import ArtAscii as ArtAscii
-import CSS (noneTextDecoration, rgb, textDecoration)
+import CSS (flexEnd, noneTextDecoration, rgb, textDecoration)
 import CSS as CSS
-import CSS.Common (none)
 import CSS.Font (color)
 import Control.Monad.ST.Class (liftST)
 import Data.Either (either)
-import Data.Tuple.Nested ((/\))
-import Debug (trace)
 import Deku.CSS (render)
-import Deku.Core (Nut, useState)
+import Deku.Core (Nut)
 import Deku.DOM as D
 import Deku.DOM.Attributes as DA
-import Deku.DOM.Listeners as DL
 import Deku.Toplevel (SSROutput, hydrateInBody, ssrInBody)
-import Draw as Draw
 import Effect (Effect)
 import Effect.Exception (throw)
 import FRP.Event (Event, create, fold)
@@ -33,15 +28,15 @@ import Yoga.JSON (read, writeImpl)
 app :: Event MousePos -> Nut
 app event = Deku.do
   D.div
-    [ DA.style_ $ render $ displayFlex *> fullscreen *> gap "20px" ]
-    [ D.h4__ "Leo :: Camp"
-    , followNut event
-    , ArtAscii.canva (event <#> (\_ -> unit))
+    [ DA.style_ $ render $ displayFlex *> fullscreen *> gap "5em" ]
+    [ followNut event
+    , D.h4__ "Leo :: Camp"
     , D.div [ DA.style_ $ render $ displayFlex ]
         [ link "https://github.com/chaoky" "github"
         , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
         , link "https://bsky.app/profile/leo.camp" "bluesky"
         ]
+    , D.div [ css $ CSS.display CSS.flex *> CSS.alignItems flexEnd *> gap "2em" ] [ D.pre__ art, ArtAscii.canva (event <#> (\_ -> unit)) ]
     ]
 
 link :: String -> String -> Nut
@@ -76,16 +71,16 @@ text = D.text <<< map show
 art :: String
 art =
   """
-                                ) 
-                               ( `(
-                             `')    )  
-                             `(    ( 
-     ___________               ) /\ ( 
-    /         / \            (  // | (`
-   /         /   \         _ -.;_/ \\--._ 
-  /         /     \       (_;-// | \ \-'.\
- /_________/-------\_     ( `.__ _  ___,')
-"         "                `'(_ )_)(_)_)'
+                     
+                     
+                     
+                     
+     ___________     
+    /         / \    
+   /         /   \   
+  /         /     \  
+ /_________/-------\_
+"         "          
   """
 
 -- setup --
