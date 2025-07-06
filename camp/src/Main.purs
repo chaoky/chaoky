@@ -31,19 +31,19 @@ app event = Deku.do
     [ DA.style_ $ render $ displayFlex *> fullscreen *> gap "5em" ]
     [ followNut event
     , D.h4__ "Leo :: Camp"
-    , D.div [ DA.style_ $ render $ displayFlex ]
+    , D.div [ css $ displayFlex *> gap ".3em" ]
         [ link "https://github.com/chaoky" "github"
         , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
         , link "https://bsky.app/profile/leo.camp" "bluesky"
         ]
-    , D.div [ css $ CSS.display CSS.flex *> CSS.alignItems flexEnd *> gap "2em" ] [ D.pre__ art, ArtAscii.canva (event <#> (\_ -> unit)) ]
+    , ArtAscii.canva (event <#> (\_ -> unit))
     ]
 
 link :: String -> String -> Nut
 link href label = D.a
   [ DA.href_ href
   , DA.target_ "__blank"
-  , css $ textDecoration noneTextDecoration *> color (rgb 0 0 0)
+  , css $ color (rgb 0 0 0)
   ]
   [ D.text_ label ]
 
