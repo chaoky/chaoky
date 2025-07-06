@@ -42,7 +42,7 @@ app event = Deku.do
 link :: String -> String -> Nut
 link href label = D.a
   [ DA.href_ href
-  , DA.target_ "__blank"
+  , DA.target_ "_blank"
   , css $ color (rgb 0 0 0)
   ]
   [ D.text_ label ]
