@@ -3,9 +3,7 @@ module Main where
 import Prelude
 
 import ArtAscii as ArtAscii
-import CSS (flexEnd, noneTextDecoration, rgb, textDecoration)
-import CSS as CSS
-import CSS.Font (color)
+import Components (css, displayFlex, fullscreen, gap, link)
 import Control.Monad.ST.Class (liftST)
 import Data.Either (either)
 import Deku.CSS (render)
@@ -13,16 +11,14 @@ import Deku.Core (Nut)
 import Deku.DOM as D
 import Deku.DOM.Attributes as DA
 import Deku.Toplevel (SSROutput, hydrateInBody, ssrInBody)
+import Draw (followNut)
 import Effect (Effect)
 import Effect.Exception (throw)
-import FRP.Event (Event, create, fold)
+import FRP.Event (Event, create)
 import FRP.Event.AnimationFrame (animationFrame')
 import FRP.Event.Mouse (getMouse, withPosition)
-import FRP.Poll (Poll, sham)
 import Foreign (Foreign)
-import Misc (css, displayFlex, fullscreen, gap, imageRendering)
-import Move (MousePos, ObjectState, followUpdate, initialState)
-import Sprite (spriteName)
+import Move (MousePos)
 import Yoga.JSON (read, writeImpl)
 
 app :: Event MousePos -> Nut
@@ -32,59 +28,22 @@ app event = Deku.do
     [ followNut event
     , D.h4__ "Leo :: Camp"
     , D.div [ css $ displayFlex *> gap ".3em" ]
-        [ link "https://github.com/chaoky" "github"
-        , link "https://www.linkedin.com/in/leonardo-d-a32973116/" "linkedin"
-        , link "https://bsky.app/profile/leo.camp" "bluesky"
+        [ link { href: "https://github.com/chaoky", target: "_blank", label: "github" }
+        , link { href: "https://www.linkedin.com/in/leonardo-d-a32973116/", target: "_blank", label: "linkedin" }
+        , link { href: "https://bsky.app/profile/leo.camp", target: "_blank", label: "bluesky" }
         ]
     , ArtAscii.canva (event <#> (\_ -> unit))
+    , link { href: "/articles", target: "_self", label: "articles" }
     ]
 
-link :: String -> String -> Nut
-link href label = D.a
-  [ DA.href_ href
-  , DA.target_ "_blank"
-  , css $ color (rgb 0 0 0)
-  ]
-  [ D.text_ label ]
+-- generate ssr output
+generate :: Effect Foreign
+generate = do
+  { event } <- liftST create
+  cache <- ssrInBody $ app event
+  pure $ writeImpl cache
 
-followNut :: Event MousePos -> Nut
-followNut event = D.div
-  [ DA.style $ sham $ (fold followUpdate initialState event) <#> drawSprite ]
-  []
-
-drawSprite :: ObjectState -> String
-drawSprite { position, spriteState } = render do
-  CSS.backgroundImage $ CSS.url spriteName
-  CSS.backgroundPosition $ CSS.positioned (CSS.px $ spriteState.point.x) (CSS.px spriteState.point.y)
-  CSS.position CSS.absolute
-  CSS.transform (CSS.translate (CSS.px position.x) (CSS.px position.y))
-  CSS.zIndex 999
-  CSS.width (CSS.px 32.0)
-  CSS.height (CSS.px 32.0)
-  CSS.top (CSS.px 0.0)
-  CSS.left (CSS.px 0.0)
-  imageRendering "pixelated"
-
-text :: forall (a ∷ Type). Show a ⇒ Poll a → Nut
-text = D.text <<< map show
-
-art :: String
-art =
-  """
-                     
-                     
-                     
-                     
-     ___________     
-    /         / \    
-   /         /   \   
-  /         /     \  
- /_________/-------\_
-"         "          
-  """
-
--- setup --
-
+-- runs after page load
 hydrate :: Foreign -> Effect (Effect Unit)
 hydrate cacheObj = do
   cache <- fromJSON cacheObj
@@ -96,12 +55,6 @@ mousePosition = do
   mouse <- getMouse
   { event } <- animationFrame' (withPosition mouse)
   pure $ event <#> _.pos
-
-generate :: Effect Foreign
-generate = do
-  { event } <- liftST create
-  cache <- ssrInBody $ app event
-  pure $ writeImpl cache
 
 fromJSON :: Foreign -> Effect SSROutput
 fromJSON = read >>> either (throw <<< show) pure
